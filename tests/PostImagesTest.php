@@ -2,12 +2,9 @@
 
 class PostImagesTest extends BaseTest
 {
-    const MAX_TITLE_LENGTH = 151;
-    const RIGHT_TITLE_LENGTH = 16;
-    const SAMPLE_IMAGE_PATH = 'images/image1.jpg';
-    const FALSE_IMAGE_PATH = 'images/false_image.jpg';
-    const LARGE_IMAGE_PATH = 'images/large_image.jpg';
-    const WRONG_FORMAT_IMAGE_PATH = 'images/wrong-format-image.avif';
+    private const MAX_TITLE_LENGTH = 151;
+    private const RIGHT_TITLE_LENGTH = 16;
+    private const SAMPLE_IMAGE_PATH = 'images/image1.jpg';
     
     public function testCantPostImagesWhithoutTitleAndImage(): void
     {
@@ -15,15 +12,9 @@ class PostImagesTest extends BaseTest
         
         $this->assertEquals(400, $response->getStatusCode());
         
-        $body = (string) $response->getBody();
-        $this->assertJson($body);
-        $data = json_decode($body, true);
+        $data = assertJSONResponse($client);
         
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('You have to include title and image', $data['message']);
-        
-        $this->assertArrayHasKey('code', $data);
-        $this->assertEquals(2, $data['code']);
+        $this->assertResponseContent($data,'You have to include title and image',2);
     }
 
     public function testCantPostImagesWithLargeTitle(): void
@@ -35,21 +26,14 @@ class PostImagesTest extends BaseTest
             "multipart" => [
                 "name" => 'image',
                 "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
-                
             ]
         ]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $body = (string) $response->getBody();
-        $this->assertJson($body);
-        $data = json_decode($body, true);
+        $data = assertJSONResponse($client);
         
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('Title is too large!', $data['message']);
-        
-        $this->assertArrayHasKey('code', $data);
-        $this->assertEquals(3, $data['code']);
+        $this->assertResponseContent($data,'Title is too large!',3);
     }
 
     public function testCantPostImagesWithWrongTitle(): void
@@ -61,93 +45,78 @@ class PostImagesTest extends BaseTest
             "multipart" => [
                 "name" => 'image',
                 "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
-                
             ]
         ]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $body = (string) $response->getBody();
-        $this->assertJson($body);
-        $data = json_decode($body, true);
+        $data = assertJSONResponse($client);
         
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('Title has forbbidden chars! Please, just use letter,numbers,-,_,!,?', $data['message']);
-        
-        $this->assertArrayHasKey('code', $data);
-        $this->assertEquals(4, $data['code']);
+        $this->assertResponseContent($data,'Title has forbbidden chars! Please, just use letter,numbers,-,_,!,?',4);
     }
 
     public function testCantPostFalseImage(): void {
+
+        $falseImagePath = 'images/false_image.jpg';
+
         $response = $this->client->post('images',[
             "json" => [
                 "title" => $this->getRandomString(self::MAX_TITLE_LENGTH)
             ],
             "multipart" => [
                 "name" => 'image',
-                "contents" => fopen(self::FALSE_IMAGE_PATH,'r'),
+                "contents" => fopen($falseImagePath,'r'),
             ]
         ]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $body = (string) $response->getBody();
-        $this->assertJson($body);
-        $data = json_decode($body, true);
+        $data = assertJSONResponse($client);
         
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('This is not an image ;)', $data['message']);
-        
-        $this->assertArrayHasKey('code', $data);
-        $this->assertEquals(6, $data['code']);
+        $this->assertResponseContent($data,'This is not an image',5);
+
     }
 
     public function testCantPostLargeImage(): void {
+
+        $largeImagePath = 'images/large_image.jpg';
+
         $response = $this->client->post('images',[
             "json" => [
                 "title" => $this->getRandomString(self::MAX_TITLE_LENGTH)
             ],
             "multipart" => [
                 "name" => 'image',
-                "contents" => fopen(self::LARGE_IMAGE_PATH,'r'),
+                "contents" => fopen($largeImagePath,'r'),
             ]
         ]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $body = (string) $response->getBody();
-        $this->assertJson($body);
-        $data = json_decode($body, true);
+        $data = assertJSONResponse($client);
         
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('Image too large!(5 MB max!)', $data['message']);
-        
-        $this->assertArrayHasKey('code', $data);
-        $this->assertEquals(7, $data['code']);
+        $this->assertResponseContent($data,'Image too large!(5 MB max!)',6);
     }
 
     public function testCantPostForbiddenImageExtension(): void {
+
+        $wrongImagePath = 'images/wrong-format-image.avif';
+        
         $response = $this->client->post('images',[
             "json" => [
                 "title" => $this->getRandomString(self::MAX_TITLE_LENGTH)
             ],
             "multipart" => [
                 "name" => 'image',
-                "contents" => fopen(self::WRONG_FORMAT_IMAGE_PATH,'r'),
+                "contents" => fopen($wrongImagePath,'r'),
             ]
         ]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $body = (string) $response->getBody();
-        $this->assertJson($body);
-        $data = json_decode($body, true);
+        $data = assertJSONResponse($client);
         
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('Wrong image format!(jpg,gif,png,webp allowed)', $data['message']);
-        
-        $this->assertArrayHasKey('code', $data);
-        $this->assertEquals(8, $data['code']);
+        $this->assertResponseContent($data,'Wrong image format!(jpg,gif,png,webp allowed)',7);
     }
 
     public function testCanPostImage(): void {
@@ -163,15 +132,23 @@ class PostImagesTest extends BaseTest
 
         $this->assertEquals(200, $response->getStatusCode());
         
+        $data = assertJSONResponse($client);
+        
+        $this->assertResponseContent($data,'Image succesfully uploaded!',1);
+    }
+
+    private function assertJSONResponse(Response $response): mixed {
         $body = (string) $response->getBody();
         $this->assertJson($body);
-        $data = json_decode($body, true);
-        
+        return json_decode($body, true);
+    }
+
+    private function assertResponseContent(mixed $data, string $message, string $code): void {
         $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('Image succesfully uploaded!', $data['message']);
+        $this->assertEquals($message, $data['message']);
         
         $this->assertArrayHasKey('code', $data);
-        $this->assertEquals(1, $data['code']);
+        $this->assertEquals($code, $data['code']);
     }
 
     private function getRandomString(int $n): string {
@@ -179,7 +156,6 @@ class PostImagesTest extends BaseTest
     }
 
     function generateWrongTitle(int $length = 16): string {
-        // Define un conjunto de caracteres permitidos
         $allowedCharacters = '!@#$%^&*()+=~`;:<>,./{}[]|';
         $allowedLength = strlen($allowedCharacters);
     
