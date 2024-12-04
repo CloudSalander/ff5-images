@@ -1,8 +1,10 @@
 <?php 
-    return [
-        'db_host' => 'localhost',
-        'db_user' => 'root',
-        'db_password' => '',
-        'db_name' => 'ff5images',
-    ];
+ // config.php
+return [
+    'host' => 'localhost',
+    'user' => 'root',
+    'password' => '',
+    'db_name' => 'ff5images',
+];
+
 ?>
