@@ -6,26 +6,14 @@ class GeneralTest extends BaseTest {
     
     public function test404NotFound()
     {
-        $this->expectException(ClientException::class);
-        $this->expectExceptionMessageMatches('/404 Not Found/');
+        $wrong_uri_sample = 'image';
+        $this->client->post($wrong_uri_sample);
+       
+        $response = $e->getResponse();
+        $this->assertEquals(404, $response->getStatusCode());
 
-        try {
-            $this->client->post('image');
-        } catch (ClientException $e) {
-  
-            $response = $e->getResponse();
-            $this->assertEquals(404, $response->getStatusCode());
-
-            $body = (string) $response->getBody();
-            $this->assertJson($body);
-            $data = json_decode($body, true);
-            $this->assertArrayHasKey('message', $data);
-            $this->assertEquals('Endpoint not found', $data['message']);
-
-            $this->assertArrayHasKey('code', $data);
-            $this->assertEquals(1, $data['code']);
-
-            throw $e;
-        }
+        $data = assertJSONResponse($response);
+        
+        $this->assertResponseContent($data,'Endpoint Not found',-1);
     }
 }

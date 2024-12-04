@@ -12,7 +12,7 @@ class PostImagesTest extends BaseTest
         
         $this->assertEquals(400, $response->getStatusCode());
         
-        $data = assertJSONResponse($client);
+        $data = assertJSONResponse($response);
         
         $this->assertResponseContent($data,'You have to include title and image',2);
     }
@@ -31,7 +31,7 @@ class PostImagesTest extends BaseTest
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $data = assertJSONResponse($client);
+        $data = assertJSONResponse($response);
         
         $this->assertResponseContent($data,'Title is too large!',3);
     }
@@ -50,7 +50,7 @@ class PostImagesTest extends BaseTest
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $data = assertJSONResponse($client);
+        $data = assertJSONResponse($response);
         
         $this->assertResponseContent($data,'Title has forbbidden chars! Please, just use letter,numbers,-,_,!,?',4);
     }
@@ -71,7 +71,7 @@ class PostImagesTest extends BaseTest
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $data = assertJSONResponse($client);
+        $data = assertJSONResponse($response);
         
         $this->assertResponseContent($data,'This is not an image',5);
 
@@ -93,7 +93,7 @@ class PostImagesTest extends BaseTest
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $data = assertJSONResponse($client);
+        $data = assertJSONResponse($response);
         
         $this->assertResponseContent($data,'Image too large!(5 MB max!)',6);
     }
@@ -114,7 +114,7 @@ class PostImagesTest extends BaseTest
 
         $this->assertEquals(400, $response->getStatusCode());
         
-        $data = assertJSONResponse($client);
+        $data = assertJSONResponse($response);
         
         $this->assertResponseContent($data,'Wrong image format!(jpg,gif,png,webp allowed)',7);
     }
@@ -132,7 +132,7 @@ class PostImagesTest extends BaseTest
 
         $this->assertEquals(200, $response->getStatusCode());
         
-        $data = assertJSONResponse($client);
+        $data = assertJSONResponse($response);
         
         $this->assertResponseContent($data,'Image succesfully uploaded!',1);
     }
