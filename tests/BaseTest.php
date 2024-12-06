@@ -10,15 +10,14 @@ class BaseTest extends TestCase {
 
     protected function setUp(): void
     {
-        // Configura el cliente HTTP
         $this->client = new Client([
-            'base_uri' => 'http://localhost/ff5-images/', // URL base de tu API
-            'timeout'  => 5.0, // Tiempo máximo para una respuesta
+            'base_uri' => 'http://localhost/ff5-images/', 
+            'timeout'  => 5.0,
+            'http_errors' => false 
         ]);
     }
 
-    protected function assertJSONResponse(Response $response): mixed {
-        $body = (string) $response->getBody();
+    protected function assertJSONResponse(string $body): mixed {
         $this->assertJson($body);
         return json_decode($body, true);
     }
