@@ -59,17 +59,19 @@ class PostImagesTest extends BaseTest
 
     public function testCantPostFalseImage(): void {
 
-        $falseImagePath = 'images/false_image.jpg';
+        $falseImagePath = __DIR__.'/images/false_image.jpg';
 
         $response = $this->client->post('images',[
-            "json" => [
-                "title" => $this->getRandomString(self::MAX_TITLE_LENGTH)
-            ],
             "multipart" => [
-                "name" => 'image',
-                "contents" => fopen($falseImagePath,'r'),
-            ]
-        ]);
+                [
+                    "name" => 'image',
+                    "contents" => fopen($falseImagePath,'r'),
+                ],
+                [
+                    "name" => "title",
+                    "contents" => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
+                ]
+            ]]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
