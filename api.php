@@ -18,7 +18,7 @@ $segments = explode('/', $requestUri);
 $body = file_get_contents('php://input');
 if (isValidCall($method,$segments)) {
    http_response_code(200);
-   route($method,$segments[1],$_POST);
+   route($method,$segments[1]);
 }  
 else {
     http_response_code(404);
