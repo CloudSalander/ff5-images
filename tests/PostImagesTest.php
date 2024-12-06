@@ -18,7 +18,6 @@ class PostImagesTest extends BaseTest
 
     public function testCantPostImagesWithLargeTitle(): void
     {   
-
         $response = $this->client->post('images',[
             "multipart" => [
                 [
@@ -37,18 +36,19 @@ class PostImagesTest extends BaseTest
         
         $this->assertResponseContent($data,'Title is too large!',3);
     }
-
     public function testCantPostImagesWithWrongTitle(): void
     {   
         $response = $this->client->post('images',[
-            "json" => [
-                "title" => $this->generateWrongTitle(self:: RIGHT_TITLE_LENGTH)
-            ],
             "multipart" => [
-                "name" => 'image',
-                "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
-            ]
-        ]);
+                [
+                    "name" => 'image',
+                    "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
+                ],
+                [
+                    "name" => "title", 
+                    "contents"=> $this->generateWrongTitle(self::RIGHT_TITLE_LENGTH)
+                ]
+            ]]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
