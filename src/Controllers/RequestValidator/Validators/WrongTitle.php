@@ -1,5 +1,5 @@
 <?php 
-namespace App\Controllers\Validator\Validators;
+namespace App\Controllers\RequestValidator\Validators;
 
 class WrongTitle implements iValidator {
     

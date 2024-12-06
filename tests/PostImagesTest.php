@@ -4,7 +4,7 @@ class PostImagesTest extends BaseTest
 {
     private const MAX_TITLE_LENGTH = 160;
     private const RIGHT_TITLE_LENGTH = 16;
-    private const SAMPLE_IMAGE_PATH = 'images/image1.jpg';
+    private const SAMPLE_IMAGE_PATH = __DIR__.'/images/image1.jpg';
     
     public function testCantPostImagesWithoutTitleAndImage(): void
     {
@@ -36,6 +36,7 @@ class PostImagesTest extends BaseTest
         
         $this->assertResponseContent($data,'Title is too large!',3);
     }
+
     public function testCantPostImagesWithWrongTitle(): void
     {   
         $response = $this->client->post('images',[
@@ -57,7 +58,8 @@ class PostImagesTest extends BaseTest
         $this->assertResponseContent($data,'Title has forbbidden chars! Please, just use letter,numbers,-,_,!,?',4);
     }
 
-    public function testCantPostFalseImage(): void {
+    public function testCantPostFalseImage(): void 
+    {
 
         $falseImagePath = __DIR__.'/images/false_image.jpg';
 
@@ -81,7 +83,8 @@ class PostImagesTest extends BaseTest
 
     }
 
-    public function testCantPostLargeImage(): void {
+    public function testCantPostLargeImage(): void 
+    {
 
         $largeImagePath = __DIR__.'/images/large_image.jpg';
 
@@ -104,7 +107,8 @@ class PostImagesTest extends BaseTest
         $this->assertResponseContent($data,'Image too large!(5 MB max!)',6);
     }
 
-    public function testCantPostForbiddenImageExtension(): void {
+    public function testCantPostForbiddenImageExtension(): void 
+    {
 
         $wrongImagePath =  __DIR__.'/images/wrong-format-image.avif';
         
@@ -128,7 +132,8 @@ class PostImagesTest extends BaseTest
         $this->assertResponseContent($data,'Wrong image format!(jpg,gif,png,webp allowed)',7);
     }
 
-    public function testCanPostImage(): void {
+    public function testCanPostImage(): void 
+    {
         $response = $this->client->post('images',[
             "json" => [
                 "title" => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
