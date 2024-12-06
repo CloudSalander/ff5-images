@@ -2,7 +2,7 @@
 
 class PostImagesTest extends BaseTest
 {
-    private const MAX_TITLE_LENGTH = 151;
+    private const MAX_TITLE_LENGTH = 160;
     private const RIGHT_TITLE_LENGTH = 16;
     private const SAMPLE_IMAGE_PATH = 'images/image1.jpg';
     
@@ -13,21 +13,23 @@ class PostImagesTest extends BaseTest
         $this->assertEquals(400, $response->getStatusCode());
         
         $data = $this->assertJSONResponse($response->getBody());
-        
         $this->assertResponseContent($data,'You have to include title and image',2);
     }
 
     public function testCantPostImagesWithLargeTitle(): void
     {   
+
         $response = $this->client->post('images',[
-            "json" => [
-                "title" => $this->getRandomString(self::MAX_TITLE_LENGTH)
-            ],
             "multipart" => [
-                "name" => 'image',
-                "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
-            ]
-        ]);
+                [
+                    "name" => 'image',
+                    "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
+                ],
+                [
+                    "name" => "title", 
+                    "contents"=> $this->getRandomString(self::MAX_TITLE_LENGTH)
+                ]
+            ]]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
