@@ -4,7 +4,7 @@ namespace App\Controllers\Validators\Errors;
 
 abstract class Error {
     protected int $code;
-    protected string $msg;
+    protected string $message;
 
     public function toArray() {
         return [
