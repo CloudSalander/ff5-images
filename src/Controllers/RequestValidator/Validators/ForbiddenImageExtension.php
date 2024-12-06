@@ -1,7 +1,7 @@
 <?php 
-namespace App\Controllers\Validators;
+namespace App\Controllers\RequestValidator\Validators;
 
-class ForbiddenImageExtension implements iRequestValidator {
+class ForbiddenImageExtension implements iValidator {
     
     private const ALLOWED_EXTENSIONS = ['jpg','jpeg','gif','png','webp'];
 

@@ -1,7 +1,7 @@
 <?php 
-namespace App\Controllers\Validators;
+namespace App\Controllers\RequestValidator\Validators;
 
-class LargeTitle implements iRequestValidator {
+class LargeTitle implements iValidator {
     
     private const LONG_TEXT_LENGTH = 150;
 

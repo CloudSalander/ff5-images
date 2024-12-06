@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers\Validators\Errors;
+namespace App\Controllers\RequestValidator\Validators\Errors;
 
 class ForbiddenImageExtension extends Error {
     public function __construct() {

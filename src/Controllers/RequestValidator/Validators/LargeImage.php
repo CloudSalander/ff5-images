@@ -1,7 +1,7 @@
 <?php 
-namespace App\Controllers\Validators;
+namespace App\Controllers\RequestValidator\Validators;
 
-class LargeImage implements iRequestValidator {
+class LargeImage implements iValidator {
     
     private const MAX_SIZE_MB = 5;
     private const BYTES_IN_MB = 1048576;

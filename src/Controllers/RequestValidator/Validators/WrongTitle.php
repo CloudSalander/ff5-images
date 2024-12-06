@@ -1,7 +1,7 @@
 <?php 
-namespace App\Controllers\Validators;
+namespace App\Controllers\Validator\Validators;
 
-class WrongTitle implements iRequestValidator {
+class WrongTitle implements iValidator {
     
     const ALLOWED_CHARS = '/^[a-zA-Z0-9-_!?]+$/';
 

@@ -1,7 +1,7 @@
 <?php 
-namespace App\Controllers\Validators;
+namespace App\Controllers\RequestValidator\Validators;
 
-class FalseImage implements iRequestValidator {
+class FalseImage implements iValidator {
     
     public function validate(): bool|string {
         if(!$this->isValidImage()) { 
