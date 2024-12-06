@@ -6,7 +6,7 @@ class LargeImage implements iRequestValidator {
     private const MAX_SIZE_MB = 5;
     private const BYTES_IN_MB = 1048576;
     
-    public function validate(array $request): bool|string {
+    public function validate(): bool|string {
         if(!$this->isLargeImage()) { 
             $error = new Errors\LargeImage();
             return $error->toJson();

@@ -10,7 +10,7 @@ function route(string $method, string $path): mixed
         if(in_array($path,array_keys($routes))) {
             $controllerInstance = new $handler['controller']();
             $controllerMethod = $handler['action'];
-            return call_user_func_array([$controllerInstance, $controllerMethod],['body' => $_POST, 'validator' => new App\Controllers\Validators\LargeTitle()]);
+            return call_user_func_array([$controllerInstance, $controllerMethod],['validator' => new App\Controllers\Validators\ForbiddenImageExtension()]);
         }
     }
     http_response_code(404);

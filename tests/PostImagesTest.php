@@ -83,17 +83,19 @@ class PostImagesTest extends BaseTest
 
     public function testCantPostLargeImage(): void {
 
-        $largeImagePath = 'images/large_image.jpg';
+        $largeImagePath = __DIR__.'/images/large_image.jpg';
 
         $response = $this->client->post('images',[
-            "json" => [
-                "title" => $this->getRandomString(self::MAX_TITLE_LENGTH)
-            ],
             "multipart" => [
-                "name" => 'image',
-                "contents" => fopen($largeImagePath,'r'),
-            ]
-        ]);
+                [
+                    "name" => 'image',
+                    "contents" => fopen($largeImagePath,'r'),
+                ],
+                [
+                    "name" => "title",
+                    "contents" => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
+                ]
+            ]]);
 
         $this->assertEquals(400, $response->getStatusCode());
         
@@ -104,17 +106,20 @@ class PostImagesTest extends BaseTest
 
     public function testCantPostForbiddenImageExtension(): void {
 
-        $wrongImagePath = 'images/wrong-format-image.avif';
+        $wrongImagePath =  __DIR__.'/images/wrong-format-image.avif';
         
         $response = $this->client->post('images',[
-            "json" => [
-                "title" => $this->getRandomString(self::MAX_TITLE_LENGTH)
-            ],
             "multipart" => [
-                "name" => 'image',
-                "contents" => fopen($wrongImagePath,'r'),
-            ]
-        ]);
+                [
+                    "name" => 'image',
+                    "contents" => fopen($wrongImagePath,'r'),
+                ],
+                [
+                    "name" => "title",
+                    "contents" => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
+                ]
+            ]]);
+
 
         $this->assertEquals(400, $response->getStatusCode());
         

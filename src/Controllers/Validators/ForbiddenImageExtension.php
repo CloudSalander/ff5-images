@@ -5,7 +5,7 @@ class ForbiddenImageExtension implements iRequestValidator {
     
     private const ALLOWED_EXTENSIONS = ['jpg','jpeg','gif','png','webp'];
 
-    public function validate(array $request): bool|string {
+    public function validate(): bool|string {
         if(!$this->isValidExtension()) { 
             $error = new Errors\ForbiddenImageExtension();
             return $error->toJson();

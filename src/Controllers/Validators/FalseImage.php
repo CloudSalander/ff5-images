@@ -3,7 +3,7 @@ namespace App\Controllers\Validators;
 
 class FalseImage implements iRequestValidator {
     
-    public function validate(array $request): bool|string {
+    public function validate(): bool|string {
         if(!$this->isValidImage()) { 
             $error = new Errors\FalseImage();
             return $error->toJson();
