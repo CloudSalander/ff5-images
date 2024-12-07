@@ -6,10 +6,12 @@ function route(string $method, string $path): mixed
     $routes = [
         'GET' => 
             ['images' => 
-                ['controller' => 'App\Controllers\ImagesController', 'action' => 'get']], 
+                ['controller' => 'App\Controllers\ImagesController', 'action' => 'get']
+            ], 
         'POST' => 
             ['images' => 
-                ['controller' => 'App\Controllers\ImagesController', 'action' => 'create','validator' => 'App\Controllers\RequestValidator\PostImages']],
+                ['controller' => 'App\Controllers\ImagesController', 'action' => 'create','validator' => 'App\Controllers\RequestValidator\PostImages']
+            ],
     ];
 
     if(in_array($method,array_keys($routes)) && in_array($path,array_keys($routes[$method]))) {

@@ -9,7 +9,7 @@ class Image
 
     private const UPLOAD_DIR = 'uploads';
 
-    public function __construct(?int $id = null)
+    public function setData(?int $id = null)
     {
         $this->id = $id;
         $this->title = $_POST['title'];
@@ -74,6 +74,26 @@ class Image
         $stmt->bind_param("ss", $this->title, $this->path);
         if ($stmt->execute()) $result = true;
 
+        $stmt->close();
+        $conn->close();
+
+        return $result;
+    }
+
+    public function getImages(): bool | array {
+        $database = new Database();
+        $result = false;
+
+        $conn = $database->getConnection();
+        if ($conn->connect_error) return false;
+        
+        $sql = "SELECT * FROM images";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return false;
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $result = $result->fetch_all(MYSQLI_ASSOC);
+        }
         $stmt->close();
         $conn->close();
 
