@@ -1,7 +1,5 @@
 <?php 
 
-use GuzzleHttp\Exception\ClientException;
-
 class GeneralTest extends BaseTest {
     
     public function test404NotFound()
