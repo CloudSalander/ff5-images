@@ -1,5 +1,5 @@
 <?php 
-namespace App\Controllers\RequestValidator\Validators;
+namespace App\Controllers\RequestValidators\Validators;
 
 class LargeImage implements iValidator {
     
@@ -8,7 +8,7 @@ class LargeImage implements iValidator {
     
     public function validate(): bool|string {
         if(!$this->isLargeImage()) { 
-            $error = new Responses\LargeImage();
+            $error = new Errors\LargeImage();
             return $error->toJson();
         }
         return true;

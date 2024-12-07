@@ -1,9 +1,10 @@
 <?php
-namespace App\Controllers\RequestValidator\Validators\Responses;
+namespace App\Responses;
 
-class SuccessfulOperation extends Error {
+class SuccessfulOperation extends SuccessResponse {
     public function __construct() {
         $this->code = 1;
         $this->message = 'Successful operation';
+        $this->data = [];
     }
 }

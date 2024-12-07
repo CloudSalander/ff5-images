@@ -1,11 +1,11 @@
 <?php 
-namespace App\Controllers\RequestValidator\Validators;
+namespace App\Controllers\RequestValidators\Validators;
 
 class FalseImage implements iValidator {
     
     public function validate(): bool|string {
         if(!$this->isValidImage()) { 
-            $error = new Responses\FalseImage();
+            $error = new Errors\FalseImage();
             return $error->toJson();
         }
         return true;

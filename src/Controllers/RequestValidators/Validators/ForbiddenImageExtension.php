@@ -1,5 +1,5 @@
 <?php 
-namespace App\Controllers\RequestValidator\Validators;
+namespace App\Controllers\RequestValidators\Validators;
 
 class ForbiddenImageExtension implements iValidator {
     
@@ -7,7 +7,7 @@ class ForbiddenImageExtension implements iValidator {
 
     public function validate(): bool|string {
         if(!$this->isValidExtension()) { 
-            $error = new Responses\ForbiddenImageExtension();
+            $error = new Errors\ForbiddenImageExtension();
             return $error->toJson();
         }
         return true;

@@ -2,9 +2,9 @@
 namespace App\Controllers;
 
 use App\Models\Image;
-use App\Controllers\RequestValidator\Validators\Responses\UnableToSave;
-use App\Controllers\RequestValidator\Validators\Responses\SuccessfulOperation;
-use App\Controllers\RequestValidator\Validators\Responses\NoImages;
+use App\Controllers\RequestValidators\Validators\Errors\UnableToSave;
+use App\Controllers\RequestValidators\Validators\Errors\NoImages;
+use App\Responses\SuccessfulOperation;
 class ImagesController {
 
     private Image $imageModel;
@@ -13,7 +13,7 @@ class ImagesController {
         $this->imageModel = new Image();
     }
 
-    public function create(RequestValidator\RequestValidator $validator): void 
+    public function create(RequestValidators\RequestValidator $validator): void 
     {
         $requestValidation = $validator->validate();
         if($requestValidation !== true)  $this->respond(400,$requestValidation);

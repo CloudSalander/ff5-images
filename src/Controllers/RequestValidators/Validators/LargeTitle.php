@@ -1,5 +1,5 @@
 <?php 
-namespace App\Controllers\RequestValidator\Validators;
+namespace App\Controllers\RequestValidators\Validators;
 
 class LargeTitle implements iValidator {
     
@@ -7,7 +7,7 @@ class LargeTitle implements iValidator {
 
     public function validate(): bool|string {
         if(strlen($_POST['title']) > self::LONG_TEXT_LENGTH) { 
-            $error = new Responses\LargeTitle();
+            $error = new Errors\LargeTitle();
             return $error->toJson();
         }
         return true;

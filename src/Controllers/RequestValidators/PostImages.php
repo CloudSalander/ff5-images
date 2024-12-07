@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers\RequestValidator;
+namespace App\Controllers\RequestValidators;
 
 
 class PostImages extends RequestValidator {

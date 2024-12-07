@@ -10,7 +10,7 @@ function route(string $method, string $path): mixed
             ], 
         'POST' => 
             ['images' => 
-                ['controller' => 'App\Controllers\ImagesController', 'action' => 'create','validator' => 'App\Controllers\RequestValidator\PostImages']
+                ['controller' => 'App\Controllers\ImagesController', 'action' => 'create','validator' => 'App\Controllers\RequestValidators\PostImages']
             ],
     ];
 

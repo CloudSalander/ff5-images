@@ -1,5 +1,5 @@
 <?php 
-namespace App\Controllers\RequestValidator\Validators;
+namespace App\Controllers\RequestValidators\Validators;
 
 class WrongTitle implements iValidator {
     
@@ -7,7 +7,7 @@ class WrongTitle implements iValidator {
 
     public function validate(): bool|string {
         if(!preg_match('/^[a-zA-Z0-9-_!?]+$/', $_POST['title'])) { 
-            $error = new Responses\WrongTitle();
+            $error = new Errors\WrongTitle();
             return $error->toJson();
         }
         return true;
