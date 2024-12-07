@@ -5,7 +5,7 @@ class FalseImage implements iValidator {
     
     public function validate(): bool|string {
         if(!$this->isValidImage()) { 
-            $error = new Errors\FalseImage();
+            $error = new Responses\FalseImage();
             return $error->toJson();
         }
         return true;

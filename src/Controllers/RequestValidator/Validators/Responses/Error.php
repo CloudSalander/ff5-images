@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\RequestValidator\Validators\Errors;
+namespace App\Controllers\RequestValidator\Validators\Responses;
 
 abstract class Error {
     protected int $code;

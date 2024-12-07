@@ -2,8 +2,8 @@
 namespace App\Controllers;
 
 use App\Models\Image;
-use App\Controllers\RequestValidator\Validators\Errors\UnableToSave;
-use App\Controllers\RequestValidator\Validators\Errors\SuccessfulOperation;
+use App\Controllers\RequestValidator\Validators\Responses\UnableToSave;
+use App\Controllers\RequestValidator\Validators\Responses\SuccessfulOperation;
 class ImagesController {
     public function create(RequestValidator\RequestValidator $validator): void 
     {

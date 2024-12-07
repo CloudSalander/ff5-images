@@ -8,7 +8,7 @@ class LargeImage implements iValidator {
     
     public function validate(): bool|string {
         if(!$this->isLargeImage()) { 
-            $error = new Errors\LargeImage();
+            $error = new Responses\LargeImage();
             return $error->toJson();
         }
         return true;

@@ -7,7 +7,7 @@ class ForbiddenImageExtension implements iValidator {
 
     public function validate(): bool|string {
         if(!$this->isValidExtension()) { 
-            $error = new Errors\ForbiddenImageExtension();
+            $error = new Responses\ForbiddenImageExtension();
             return $error->toJson();
         }
         return true;
