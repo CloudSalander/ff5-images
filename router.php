@@ -2,15 +2,25 @@
 
 function route(string $method, string $path): mixed
 {
+    //Three dimensions array...sorry ;(
     $routes = [
-        'images' => ['controller' => 'App\Controllers\ImagesController', 'action' => 'create'],
+        'GET' => 
+            ['images' => 
+                ['controller' => 'App\Controllers\ImagesController', 'action' => 'get']], 
+        'POST' => 
+            ['images' => 
+                ['controller' => 'App\Controllers\ImagesController', 'action' => 'create','validator' => 'App\Controllers\RequestValidator\PostImages']],
     ];
 
-    foreach ($routes as $handler) {
-        if(in_array($path,array_keys($routes))) {
-            $controllerInstance = new $handler['controller']();
-            $controllerMethod = $handler['action'];
-            return call_user_func_array([$controllerInstance, $controllerMethod],['validator' => new App\Controllers\RequestValidator\PostImages]);
+    if(in_array($method,array_keys($routes)) && in_array($path,array_keys($routes[$method]))) {
+        $controllerInstance = new $routes[$method][$path]['controller']();
+        $controllerMethod = $routes[$method][$path]['action'];
+        if(isset($routes[$method][$path]['validator'])) {
+            $requestValidator = new $routes[$method][$path]['validator']();
+            return call_user_func_array([$controllerInstance, $controllerMethod],['validator' => $requestValidator]);
+        }
+        else {
+            return call_user_func_array([$controllerInstance, $controllerMethod],[]);
         }
     }
     http_response_code(404);

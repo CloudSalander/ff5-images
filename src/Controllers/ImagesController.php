@@ -22,6 +22,10 @@ class ImagesController {
         }
     }
 
+    public function get() {
+        echo "I'M in :)";
+    }
+
     private function respond(int $code, string $message) {
         http_response_code($code);
         echo $message;
