@@ -1,6 +1,8 @@
 <?php
-
+namespace App\Models;
+use \mysqli;
 include 'config.php';
+
 
 class Database
 {
@@ -17,7 +19,7 @@ class Database
         $this->connection = new mysqli($config['host'], $config['user'], $config['password'], $config['db_name']);
 
         if ($this->connection->connect_error) {
-            die("Error de conexión: " . $this->connection->connect_error);
+            die("Connection Error " . $this->connection->connect_error);
         }
     }
 

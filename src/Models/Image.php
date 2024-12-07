@@ -1,22 +1,21 @@
 <?php
 
 namespace App\Models;
-
 class Image
 {
-
- private ?int $id;
+    private ?int $id;
     private string $title;
     private string $path;
 
-    public function __construct(string $title, string $path, ?int $id = null)
+    private const UPLOAD_DIR = 'uploads';
+
+    public function __construct(?int $id = null)
     {
         $this->id = $id;
-        $this->title = $title;
-        $this->path = $path;
+        $this->title = $_POST['title'];
+        $this->path = $this->createPath();
     }
-
-   
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -38,11 +37,6 @@ class Image
         $this->title = $title;
     }
 
-    public function setPath(string $path): void
-    {
-        $this->path = $path;
-    }
-
     public function toArray(): array
     {
         return [
@@ -52,12 +46,39 @@ class Image
         ];
     }
 
-    public static function fromArray(array $data): self
-    {
-        return new self(
-            $data['title'],
-            $data['path'],
-            $data['id'] ?? null
-        );
+    private function createPath(): string {
+        $fileName = $_FILES['image']['name'];
+        return self::UPLOAD_DIR."/".time()."_".$fileName;
     }
+
+    public function save(): bool {
+        if($this->saveFile() && $this->saveRow()) return true;
+        else return false; 
+    }
+
+    private function saveFile(): bool {
+        return move_uploaded_file($_FILES['image']['tmp_name'], $this->path);
+    }
+
+    private function saveRow(): bool {
+        $database = new Database();
+        $result = false;
+
+        $conn = $database->getConnection();
+        if ($conn->connect_error) return false;
+        
+        $sql = "INSERT INTO images (title, path) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return false;
+        
+        $stmt->bind_param("ss", $this->title, $this->path);
+        if ($stmt->execute()) $result = true;
+
+        $stmt->close();
+        $conn->close();
+
+        return $result;
+    }
+
+
 }

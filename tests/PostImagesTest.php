@@ -135,20 +135,22 @@ class PostImagesTest extends BaseTest
     public function testCanPostImage(): void 
     {
         $response = $this->client->post('images',[
-            "json" => [
-                "title" => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
-            ],
             "multipart" => [
-                "name" => 'image',
-                "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
-            ]
-        ]);
+                [
+                    "name" => 'image',
+                    "contents" => fopen(self::SAMPLE_IMAGE_PATH,'r'),
+                ],
+                [
+                    "name" => 'title',
+                    "contents" => $this->getRandomString(self::RIGHT_TITLE_LENGTH),
+                ]
+            ]]);
 
         $this->assertEquals(200, $response->getStatusCode());
         
         $data = $this->assertJSONResponse($response->getBody());
         
-        $this->assertResponseContent($data,'Image succesfully uploaded!',1);
+        $this->assertResponseContent($data,'Successful operation',1);
     }
 
 }

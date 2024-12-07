@@ -1,19 +1,30 @@
 <?php 
 namespace App\Controllers;
 
+use App\Models\Image;
+use App\Controllers\RequestValidator\Validators\Errors\UnableToSave;
+use App\Controllers\RequestValidator\Validators\Errors\SuccessfulOperation;
 class ImagesController {
-
     public function create(RequestValidator\RequestValidator $validator): void 
     {
         $requestValidation = $validator->validate();
-        if($requestValidation !== true) {
-            http_response_code(400); 
-            echo $requestValidation;
-        }
+        if($requestValidation !== true)  $this->respond(400,$requestValidation);
         else {
-            http_response_code(200);
-            //INSERT IMAGE
+            $image = new Image();
+            if($image->save()) {
+                $response = new SuccessfulOperation();
+                $this->respond(200,$response->toJson());
+            }
+            else {
+                $response = new UnableToSave();
+                $this->respond(500, $response->toJson());
+            }
         }
+    }
+
+    private function respond(int $code, string $message) {
+        http_response_code($code);
+        echo $message;
     }
 } 
 
