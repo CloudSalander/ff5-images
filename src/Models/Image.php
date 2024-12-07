@@ -87,7 +87,7 @@ class Image
         $conn = $database->getConnection();
         if ($conn->connect_error) return false;
         
-        $sql = "SELECT * FROM images";
+        $sql = "SELECT id,title,path as image FROM images";
         $stmt = $conn->prepare($sql);
         if (!$stmt) return false;
         if ($stmt->execute()) {

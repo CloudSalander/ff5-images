@@ -15,12 +15,14 @@ class GetImagesTest extends BaseTest
     public function  testGetImagesReturnsCorrectStructure(): void {
         $this->insertSomeImages();
         $response = $this->client->get('images');
+
         $this->assertEquals(200, $response->getStatusCode());
-        $data = json_decode($response->getBody(), true);
-        $this->validateGetImagesResponseStructure($data);
+        $data = $this->assertJSONResponse($response->getBody());
+        
+        $this->validateGetImagesResponseStructure($data['data']);
     }
 
-    private function validateGetImagesResponseStructure(string $data) {
+    private function validateGetImagesResponseStructure(array $data) {
         $this->assertIsArray($data);
         $this->assertGreaterThan(0, count($data));
 

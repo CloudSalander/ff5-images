@@ -4,7 +4,8 @@ namespace App\Controllers;
 use App\Models\Image;
 use App\Controllers\RequestValidators\Validators\Errors\UnableToSave;
 use App\Controllers\RequestValidators\Validators\Errors\NoImages;
-use App\Responses\SuccessfulOperation;
+use App\Responses\SuccessfulOperationResponse;
+use App\Responses\ImagesResponse;
 class ImagesController {
 
     private Image $imageModel;
@@ -20,7 +21,7 @@ class ImagesController {
         else {
             $this->imageModel->setData();
             if($this->imageModel->save()) {
-                $response = new SuccessfulOperation();
+                $response = new SuccessfulOperationResponse();
                 $this->respond(200,$response->toJson());
             }
             else {
@@ -37,7 +38,8 @@ class ImagesController {
             $this->respond(204,$response->toJson());
         }
         else {
-            //return array of images
+            $response = new ImagesResponse($images);
+            $this->respond(200,$response->toJson());
         }
     }
 
