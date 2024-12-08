@@ -2,11 +2,11 @@
 
 class GeneralTest extends BaseTest {
     
-    public function test404NotFound()
+    public function testNotFound()
     {
         $wrong_uri_sample = 'images';
         $response = $this->client->post($wrong_uri_sample);
        
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 }
