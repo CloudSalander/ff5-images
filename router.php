@@ -16,6 +16,10 @@ function route(string $method, array $path): mixed
             ['images' => 
                 ['controller' => 'App\Controllers\ImagesController', 'action' => 'create','validator' => 'App\Controllers\RequestValidators\PostImages']
             ],
+        'DELETE' =>
+            ['images' => 
+                ['controller' => 'App\Controllers\ImagesController', 'action' => 'delete']
+            ]   
     ];
 
     if(in_array($method,array_keys($routes)) && in_array($path,array_keys($routes[$method]))) {

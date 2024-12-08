@@ -12,7 +12,7 @@ class GetImagesTest extends BaseTest
         $this->assertResponseContent($data,'No images found!',9);
     }
 
-    public function  testGetImagesReturnsCorrectStructure(): void {
+    public function testGetImagesReturnsCorrectStructure(): void {
         $this->insertImages(3);
         $response = $this->client->get('images');
 
@@ -25,7 +25,7 @@ class GetImagesTest extends BaseTest
     public function testGetNonExistingImage() {
         $this->clearImagesTable();
         $id = 1;
-        $response = $this->client->request('GET', "images/{$id}");
+        $response = $this->client->get("images/{$id}");
         
         $this->assertEquals(404, $response->getStatusCode());
         $data = $this->assertJSONResponse($response->getBody());
@@ -35,7 +35,7 @@ class GetImagesTest extends BaseTest
     public function testGetExistingImage() {
         $this->insertImages(1);
         $id = 1;
-        $response = $this->client->request('GET', "images/{$id}"); 
+        $response = $this->client->get("images/{$id}"); 
         
         $this->assertEquals(200, $response->getStatusCode());
         $data = $this->assertJSONResponse($response->getBody());

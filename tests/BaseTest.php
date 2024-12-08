@@ -70,7 +70,7 @@ class BaseTest extends TestCase {
         for($con = 1; $con <= $n_images; ++$con) {
             $fileTitle = "image".$con;
             $filePath = "images/image1.jpg";
-            
+            move_uploaded_file(__DIR__."/".$filePath,'uploads'.$fileTitle);
             $sql = "INSERT INTO images (title, path) VALUES (?, ?)";
             $stmt = $connection->prepare($sql);
             if (!$stmt) die("Something was wrong");
