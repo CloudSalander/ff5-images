@@ -6,8 +6,13 @@ class Image
     private ?int $id;
     private string $title;
     private string $path;
+    private Database $database;
 
     private const UPLOAD_DIR = 'uploads';
+
+    public function __construct() {
+        $this->database = new Database();
+    }
 
     public function setData(?int $id = null)
     {
@@ -61,12 +66,11 @@ class Image
     }
 
     private function saveRow(): bool {
-        $database = new Database();
+        
         $result = false;
 
-        $conn = $database->getConnection();
-        if ($conn->connect_error) return false;
-        
+        $conn = $this->database->getConnection();
+    
         $sql = "INSERT INTO images (title, path) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) return false;
@@ -81,11 +85,8 @@ class Image
     }
 
     public function getImages(): bool | array {
-        $database = new Database();
+        $conn = $this->database->getConnection();
         $result = false;
-
-        $conn = $database->getConnection();
-        if ($conn->connect_error) return false;
         
         $sql = "SELECT id,title,path as image FROM images";
         $stmt = $conn->prepare($sql);
@@ -101,11 +102,8 @@ class Image
     }
 
     public function getImageById(int $id): bool | array {
-        $database = new Database();
+        $conn = $this->database->getConnection();
     
-        $conn = $database->getConnection();
-        if ($conn->connect_error) return false;
-        
         $sql = "SELECT id,title,path as image FROM images WHERE id = ?";
         $stmt = $conn->prepare($sql);
         if (!$stmt) return false;
@@ -122,6 +120,4 @@ class Image
         $conn->close();
         return false;
     }
-
-
 }
