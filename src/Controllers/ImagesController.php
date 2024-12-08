@@ -47,6 +47,10 @@ class ImagesController {
         }
     }
 
+    public function update($id = null) {
+        echo "ei tarat! te'n recordes de mi?";
+    }
+
     public function delete($id = null) {
         $result = false;
         if(isset($id)) $result = $this->imageModel->deleteImageById($id);
