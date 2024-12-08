@@ -31,7 +31,7 @@ class ImagesController {
         }
     }
 
-    public function get($id = null) {
+    public function get(int $id = null) {
         if(isset($id)) {
             $image = $this->imageModel->getImageById($id);
             $image !== false? $images[] = $image : $images = [];
@@ -47,11 +47,21 @@ class ImagesController {
         }
     }
 
-    public function update($id = null) {
-        echo "ei tarat! te'n recordes de mi?";
+    public function update(RequestValidators\RequestValidator $validator, int $id = null) {
+        $this->setInputData();
+        $requestValidation = $validator->validate();
+        if($requestValidation !== true)  $this->respond(400,$requestValidation);
+        else echo "Validated!";
+    }
+    //Not the most elegant one, but effective :)
+    private function setInputData() {
+        $rawData = file_get_contents('php://input');
+        $inputData = json_decode($rawData, true);
+        $_POST['title'] = $inputData['title'];
+        $_POST['effect'] = $inputData['effect'];
     }
 
-    public function delete($id = null) {
+    public function delete(int $id = null) {
         $result = false;
         if(isset($id)) $result = $this->imageModel->deleteImageById($id);
         

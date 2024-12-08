@@ -9,15 +9,9 @@ class PutImagesTest extends BaseTest
         $this->clearImagesTable();
         $id = 1;
         $response = $this->client->put("images/{$id}",[
-           "form_data" => [
-                [
-                    "option" => 'image',
-                    "contents" => self::TRANSFORMATION_OPTIONS[0],
-                ],
-                [
-                    "name" => "title", 
-                    "contents"=> $this->getRandomString(self::RIGHT_TITLE_LENGTH)
-                ]
+            'json' => [
+                'effect' => self::TRANSFORMATION_OPTIONS[0],
+                'title' => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
             ]
         ]);
 
@@ -30,16 +24,10 @@ class PutImagesTest extends BaseTest
         $this->insertImages(1);
         $id = 1;
         $response = $this->client->put("images/{$id}",[
-            "form_data" => [
-                 [
-                     "option" => 'image',
-                     "contents" => self::TRANSFORMATION_OPTIONS[0],
-                 ],
-                 [
-                     "name" => "title", 
-                     "contents"=> $this->getRandomString(self::RIGHT_TITLE_LENGTH)
-                 ]
-             ]
+            'json' => [
+                'effect' => self::TRANSFORMATION_OPTIONS[0],
+                'title' => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
+            ]
         ]);
         $this->assertEquals(200, $response->getStatusCode());
         $data = $this->assertJSONResponse($response->getBody());
@@ -51,19 +39,13 @@ class PutImagesTest extends BaseTest
         $this->insertImages(1);
         $id = 1;
         $response = $this->client->put("images/{$id}",[
-            "form_data" => [
-                 [
-                     "option" => 'image',
-                     "contents" => 'rotate', #non-existing effect,by now :)
-                 ],
-                 [
-                     "name" => "title", 
-                     "contents"=> $this->getRandomString(self::RIGHT_TITLE_LENGTH)
-                 ]
-             ]
+            'json' => [
+                'effect' => 'rotate',
+                'title' => $this->getRandomString(self::RIGHT_TITLE_LENGTH)
+            ]
         ]);
         
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
         $data = $this->assertJSONResponse($response->getBody());
         $this->assertResponseContent($data,'Please,input valid effect(grayscale,invert,pixelate)',10);
     }
@@ -74,16 +56,10 @@ class PutImagesTest extends BaseTest
         $this->insertImages(1);
         $id = 1;
         $response = $this->client->put("images/{$id}",[
-            "form_data" => [
-                 [
-                     "option" => 'image',
-                     "contents" => self::TRANSFORMATION_OPTIONS[0],
-                 ],
-                 [
-                     "name" => "title", 
-                     "contents"=> $this->generateWrongTitle(self::RIGHT_TITLE_LENGTH)
-                 ]
-             ]
+            'json' => [
+                'effect' => self::TRANSFORMATION_OPTIONS[0],
+                'title' => $this->generateWrongTitle(self::RIGHT_TITLE_LENGTH)
+            ]
         ]);
         $this->assertEquals(400, $response->getStatusCode());
         
@@ -98,16 +74,10 @@ class PutImagesTest extends BaseTest
         $this->insertImages(1);
         $id = 1;
         $response = $this->client->put("images/{$id}",[
-            "form_data" => [
-                 [
-                     "option" => 'image',
-                     "contents" => self::TRANSFORMATION_OPTIONS[0],
-                 ],
-                 [
-                     "name" => "title", 
-                     "contents"=> $this->generateWrongTitle(self::RIGHT_TITLE_LENGTH)
-                 ]
-             ]
+            'json' => [
+                'effect' => self::TRANSFORMATION_OPTIONS[0],
+                'title' => $this->getRandomString(self::MAX_TITLE_LENGTH)
+            ]
         ]);
         $this->assertEquals(400, $response->getStatusCode());
         

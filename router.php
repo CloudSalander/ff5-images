@@ -18,7 +18,7 @@ function route(string $method, array $path): mixed
             ],
         'PUT' => 
             ['images' => 
-                ['controller' => 'App\Controllers\ImagesController', 'action' => 'update'] #'validator' => 'App\Controllers\RequestValidators\PutImages'
+                ['controller' => 'App\Controllers\ImagesController', 'action' => 'update','validator' => 'App\Controllers\RequestValidators\PutImages'] 
             ],
         'DELETE' =>
             ['images' => 
