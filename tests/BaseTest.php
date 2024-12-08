@@ -7,7 +7,6 @@ class BaseTest extends TestCase {
     
     protected Client $client;
     protected const SAMPLE_IMAGE_PATH = __DIR__.'/images/image1.jpg';
-    private const N_IMAGES_TO_REGISTER = 3;
     private array $dbConfig;
 
     protected function setUp(): void
@@ -66,9 +65,9 @@ class BaseTest extends TestCase {
         $connection->close();
     }
 
-    protected function insertSomeImages(): void {
+    protected function insertImages($n_images = 3): void {
         $connection = $this->prepareConnection();
-        for($con = 1; $con <= self::N_IMAGES_TO_REGISTER; ++$con) {
+        for($con = 1; $con <= $n_images; ++$con) {
             $fileTitle = "image".$con;
             $filePath = "images/image1.jpg";
             

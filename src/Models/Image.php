@@ -100,5 +100,28 @@ class Image
         return $result;
     }
 
+    public function getImageById(int $id): bool | array {
+        $database = new Database();
+    
+        $conn = $database->getConnection();
+        if ($conn->connect_error) return false;
+        
+        $sql = "SELECT id,title,path as image FROM images WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return false;
+        
+        $stmt->bind_param("i", $id);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $result = $result->fetch_assoc();
+            if(is_null($result)) return false;
+            else return $result;
+        }
+        $stmt->close();
+        $conn->close();
+        return false;
+    }
+
 
 }

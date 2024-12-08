@@ -6,19 +6,39 @@ class GetImagesTest extends BaseTest
     {
         $this->clearImagesTable();
         $response = $this->client->get('images');
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
 
         $data = $this->assertJSONResponse($response->getBody());
         $this->assertResponseContent($data,'No images found!',9);
     }
 
     public function  testGetImagesReturnsCorrectStructure(): void {
-        $this->insertSomeImages();
+        $this->insertImages(3);
         $response = $this->client->get('images');
 
         $this->assertEquals(200, $response->getStatusCode());
         $data = $this->assertJSONResponse($response->getBody());
         
+        $this->validateGetImagesResponseStructure($data['data']);
+    }
+
+    public function testGetNonExistingImage() {
+        $this->clearImagesTable();
+        $id = 1;
+        $response = $this->client->request('GET', "images/{$id}");
+        
+        $this->assertEquals(404, $response->getStatusCode());
+        $data = $this->assertJSONResponse($response->getBody());
+        $this->assertResponseContent($data,'No images found!',9);
+    }
+
+    public function testGetExistingImage() {
+        $this->insertImages(1);
+        $id = 1;
+        $response = $this->client->request('GET', "images/{$id}"); 
+        
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = $this->assertJSONResponse($response->getBody());
         $this->validateGetImagesResponseStructure($data['data']);
     }
 
@@ -34,5 +54,6 @@ class GetImagesTest extends BaseTest
             $this->assertIsString($image['image']);
             $this->assertMatchesRegularExpression('/^data:image\/(jpeg|png|gif|jpg|webp);base64,/', $image['image']);
         }
+        $this->clearImagesTable();
     }
 }

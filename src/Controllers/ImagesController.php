@@ -31,11 +31,15 @@ class ImagesController {
         }
     }
 
-    public function get() {
-        $images = $this->imageModel->getImages();
+    public function get($id = null) {
+        if(isset($id)) {
+            $image = $this->imageModel->getImageById($id);
+            $image !== false? $images[] = $image : $images = [];
+        }
+        else $images = $this->imageModel->getImages();
         if(count($images) === 0) {
             $response = new NoImages();
-            $this->respond(204,$response->toJson());
+            $this->respond(404,$response->toJson());
         }
         else {
             $response = new ImagesResponse($images);
