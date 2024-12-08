@@ -47,6 +47,10 @@ class ImagesController {
         }
     }
 
+    public function delete($id = null) {
+        var_dump("I'm in!");
+    }
+
     private function respond(int $code, string $message) {
         http_response_code($code);
         echo $message;
