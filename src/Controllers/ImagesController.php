@@ -14,10 +14,10 @@ class ImagesController {
         $this->imageModel = new Image();
     }
 
-    public function create(RequestValidators\RequestValidator $validator): void 
+    public function create(RequestValidators\RequestValidator $validator) 
     {
         $requestValidation = $validator->validate();
-        if($requestValidation !== true)  $this->respond(400,$requestValidation);
+        if($requestValidation !== true)  return $this->respond(400,$requestValidation);
         else {
             $this->imageModel->setData();
             if($this->imageModel->save()) {
@@ -31,7 +31,7 @@ class ImagesController {
         }
     }
 
-    public function get($id = null) {
+    public function get(int $id = null) {
         if(isset($id)) {
             $image = $this->imageModel->getImageById($id);
             $image !== false? $images[] = $image : $images = [];
@@ -47,7 +47,35 @@ class ImagesController {
         }
     }
 
-    public function delete($id = null) {
+    public function update(RequestValidators\RequestValidator $validator, int $id = null) {
+        $this->setInputData();
+        $requestValidation = $validator->validate();
+        if($requestValidation !== true)  return $this->respond(400,$requestValidation);
+        
+        if(isset($id)) $result = $this->imageModel->updateImageById($id);
+        
+        if($result) {
+            $response = new SuccessfulOperationResponse();
+            $this->respond(200,$response->toJson());
+        }
+        else {
+            $response = new NoImages();
+            $this->respond(404,$response->toJson());
+        }   
+    }
+    //Not the most elegant one, but effective :)
+    private function setInputData() {
+        $rawData = file_get_contents('php://input');
+        $inputData = json_decode($rawData, true);
+        
+        if(isset($inputData['title'])) $_POST['title'] = $inputData['title'];
+        else $_POST['title'] = '';
+
+        if(isset($inputData['effect'])) $_POST['effect'] = $inputData['effect'];
+        else $_POST['effect'] = '';
+    }
+
+    public function delete(int $id = null) {
         $result = false;
         if(isset($id)) $result = $this->imageModel->deleteImageById($id);
         

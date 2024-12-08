@@ -2,9 +2,6 @@
 
 class PostImagesTest extends BaseTest
 {
-    private const MAX_TITLE_LENGTH = 160;
-    private const RIGHT_TITLE_LENGTH = 16;
-    
     public function testCantPostImagesWithoutTitleAndImage(): void
     {
         $response = $this->client->post('images');

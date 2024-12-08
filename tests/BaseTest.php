@@ -9,6 +9,9 @@ class BaseTest extends TestCase {
     protected const SAMPLE_IMAGE_PATH = __DIR__.'/images/image1.jpg';
     private array $dbConfig;
 
+    protected const MAX_TITLE_LENGTH = 160;
+    protected const RIGHT_TITLE_LENGTH = 16;
+
     protected function setUp(): void
     {
         $this->client = new Client([
@@ -80,6 +83,21 @@ class BaseTest extends TestCase {
             $stmt->close();
         }
         $connection->close();
+    }
+
+    protected function validateGetImagesResponseStructure(array $data) {
+        $this->assertIsArray($data);
+        $this->assertGreaterThan(0, count($data));
+
+        foreach ($data as $image) {
+            $this->assertArrayHasKey('title', $image);
+            $this->assertArrayHasKey('image', $image);
+            $this->assertIsString($image['title']);
+
+            $this->assertIsString($image['image']);
+            $this->assertMatchesRegularExpression('/^data:image\/(jpeg|png|gif|jpg|webp);base64,/', $image['image']);
+        }
+        $this->clearImagesTable();
     }
 
     private function prepareConnection(): mixed

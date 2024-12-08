@@ -41,19 +41,4 @@ class GetImagesTest extends BaseTest
         $data = $this->assertJSONResponse($response->getBody());
         $this->validateGetImagesResponseStructure($data['data']);
     }
-
-    private function validateGetImagesResponseStructure(array $data) {
-        $this->assertIsArray($data);
-        $this->assertGreaterThan(0, count($data));
-
-        foreach ($data as $image) {
-            $this->assertArrayHasKey('title', $image);
-            $this->assertArrayHasKey('image', $image);
-            $this->assertIsString($image['title']);
-
-            $this->assertIsString($image['image']);
-            $this->assertMatchesRegularExpression('/^data:image\/(jpeg|png|gif|jpg|webp);base64,/', $image['image']);
-        }
-        $this->clearImagesTable();
-    }
 }

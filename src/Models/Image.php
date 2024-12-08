@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Models;
+use App\Models\ImageTransformations\GrayScale;
+use App\Models\ImageTransformations\ColorsInversion;
+use App\Models\ImageTransformations\ImagePixelation;
+
 class Image
 {
     private ?int $id;
@@ -113,10 +117,41 @@ class Image
         return $result;
     }
 
+    public function updateImageById(int $id): bool|array {
+        $result = false;
+        $image = $this->getImageById($id);
+        if(!$image) return false;
+        if($_POST['effect'] != "") {
+            //TODO: Improve ImageIntervention Error Handling
+            $this->transformImage($image['image']);
+            $result = true;
+        }
+        if($_POST['title'] != "") {
+            $sql = "UPDATE images SET title = ? WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            
+            $stmt->bind_param("si", $_POST['title'],$id);
+            if ($stmt->execute()) {
+                if($stmt->affected_rows > 0) $result = true;
+            }
+            $stmt->close();
+        }
+        return $result;
+    }
+    
+    private function transformImage(string $imagePath): void {
+        match($_POST['effect']) {
+            'grayscale' => new GrayScale($imagePath),
+            'invert' => new ColorsInversion($imagePath),
+            'pixelate' => new ImagePixelation($imagePath)
+        };
+    }
+
     public function deleteImageById(int $id): bool {
         $image_row = $this->getImageById($id);
         return $this->deleteRow($id) && unlink($image_row['image']);
     }
+
 
     private function deleteRow(int $id): bool {
         $result = false;
@@ -131,6 +166,7 @@ class Image
         $stmt->close();
         return $result;
     }
+    
 
     public function __destruct()
     {
