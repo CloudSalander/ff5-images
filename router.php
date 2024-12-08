@@ -4,6 +4,7 @@ function route(string $method, array $path): mixed
 {
     $id = 0;
     if(isset($path[2])) $id = $path[2];
+    
     $path = $path[1];
     //Three dimensions array...sorry ;(
     //Promise that the rest of the code apart of this file has better looking :)
