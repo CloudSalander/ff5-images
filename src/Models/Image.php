@@ -6,10 +6,15 @@ class Image
     private ?int $id;
     private string $title;
     private string $path;
+    private Database $database;
 
     private const UPLOAD_DIR = 'uploads';
 
-    public function __construct(?int $id = null)
+    public function __construct() {
+        $this->database = new Database();
+    }
+
+    public function setData(?int $id = null)
     {
         $this->id = $id;
         $this->title = $_POST['title'];
@@ -61,12 +66,11 @@ class Image
     }
 
     private function saveRow(): bool {
-        $database = new Database();
+        
         $result = false;
 
-        $conn = $database->getConnection();
-        if ($conn->connect_error) return false;
-        
+        $conn = $this->database->getConnection();
+    
         $sql = "INSERT INTO images (title, path) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) return false;
@@ -80,5 +84,40 @@ class Image
         return $result;
     }
 
+    public function getImages(): bool | array {
+        $conn = $this->database->getConnection();
+        $result = false;
+        
+        $sql = "SELECT id,title,path as image FROM images";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return false;
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $result = $result->fetch_all(MYSQLI_ASSOC);
+        }
+        $stmt->close();
+        $conn->close();
 
+        return $result;
+    }
+
+    public function getImageById(int $id): bool | array {
+        $conn = $this->database->getConnection();
+    
+        $sql = "SELECT id,title,path as image FROM images WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) return false;
+        
+        $stmt->bind_param("i", $id);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            $result = $result->fetch_assoc();
+            if(is_null($result)) return false;
+            else return $result;
+        }
+        $stmt->close();
+        $conn->close();
+        return false;
+    }
 }

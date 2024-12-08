@@ -1,5 +1,5 @@
 <?php 
-namespace App\Controllers\RequestValidator\Validators;
+namespace App\Controllers\RequestValidators\Validators;
 
 class FalseImage implements iValidator {
     

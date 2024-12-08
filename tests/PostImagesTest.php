@@ -4,7 +4,6 @@ class PostImagesTest extends BaseTest
 {
     private const MAX_TITLE_LENGTH = 160;
     private const RIGHT_TITLE_LENGTH = 16;
-    private const SAMPLE_IMAGE_PATH = __DIR__.'/images/image1.jpg';
     
     public function testCantPostImagesWithoutTitleAndImage(): void
     {
@@ -151,6 +150,7 @@ class PostImagesTest extends BaseTest
         $data = $this->assertJSONResponse($response->getBody());
         
         $this->assertResponseContent($data,'Successful operation',1);
+        $this->clearImagesTable();
     }
 
 }

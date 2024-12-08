@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers\RequestValidator\Validators;
+namespace App\Controllers\RequestValidators\Validators;
 
 interface iValidator {
     public function validate(): bool|string;

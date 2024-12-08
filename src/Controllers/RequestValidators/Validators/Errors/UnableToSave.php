@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers\RequestValidator\Validators\Errors;
+namespace App\Controllers\RequestValidators\Validators\Errors;
 
 class UnableToSave extends Error {
     public function __construct() {

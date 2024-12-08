@@ -15,10 +15,10 @@ const ALLOWED_ACTIONS = ['GET','POST','PUT','DELETE'];
 $method = $_SERVER['REQUEST_METHOD'];
 $requestUri = trim($_SERVER['REQUEST_URI'], '/');
 $segments = explode('/', $requestUri);
-$body = file_get_contents('php://input');
+
 if (isValidCall($method,$segments)) {
    http_response_code(200);
-   route($method,$segments[1]);
+   route($method,$segments);
 }  
 else {
     http_response_code(404);
@@ -27,9 +27,3 @@ else {
 function isValidCall(string $method, array $segments): bool {
     return in_array($method,ALLOWED_ACTIONS) && in_array($segments[1], ALLOWED_PATHS);
 }
-/*
-function validateAndReturnBody(string $jsonString): mixed {
-    $data = json_decode($jsonString,true);
-    if (json_last_error() !== JSON_ERROR_NONE || is_null($data)) return [];
-    return $data;
-} */

@@ -2,11 +2,12 @@
 
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 
 class BaseTest extends TestCase {
     
     protected Client $client;
+    protected const SAMPLE_IMAGE_PATH = __DIR__.'/images/image1.jpg';
+    private array $dbConfig;
 
     protected function setUp(): void
     {
@@ -15,6 +16,12 @@ class BaseTest extends TestCase {
             'timeout'  => 5.0,
             'http_errors' => false 
         ]);
+        $this->dbConfig = [
+            'host' => 'localhost',
+            'user' => 'root',
+            'password' => '',
+            'database' => 'ff5images_test'
+        ];
     }
 
     protected function assertJSONResponse(string $body): mixed {
@@ -45,5 +52,42 @@ class BaseTest extends TestCase {
             $result .= $allowedCharacters[$index];
         }
         return $result;
+    }
+
+    protected function clearImagesTable(): void
+    {
+        $connection = $this->prepareConnection();
+        $sql = "TRUNCATE table images";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+
+        $stmt->close();
+        $connection->close();
+    }
+
+    protected function insertImages($n_images = 3): void {
+        $connection = $this->prepareConnection();
+        for($con = 1; $con <= $n_images; ++$con) {
+            $fileTitle = "image".$con;
+            $filePath = "images/image1.jpg";
+            
+            $sql = "INSERT INTO images (title, path) VALUES (?, ?)";
+            $stmt = $connection->prepare($sql);
+            if (!$stmt) die("Something was wrong");
+        
+            $stmt->bind_param("ss", $fileTitle, $filePath);
+            $stmt->execute();
+            $stmt->close();
+        }
+        $connection->close();
+    }
+
+    private function prepareConnection(): mixed
+    {
+        $connection = new mysqli($this->dbConfig['host'], $this->dbConfig['user'], $this->dbConfig['password'], $this->dbConfig['database']);
+        if ($connection->connect_error) {
+            die("Connection Error " . $connection->connect_error);
+        }
+        return $connection;
     }
 }

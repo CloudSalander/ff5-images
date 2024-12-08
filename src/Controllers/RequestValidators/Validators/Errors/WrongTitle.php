@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers\RequestValidator\Validators\Errors;
+namespace App\Controllers\RequestValidators\Validators\Errors;
 
 class WrongTitle extends Error {
     public function __construct() {

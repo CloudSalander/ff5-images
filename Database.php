@@ -1,9 +1,6 @@
 <?php
 namespace App\Models;
 use \mysqli;
-include 'config.php';
-
-
 class Database
 {
     private mysqli $connection;
@@ -16,8 +13,12 @@ class Database
     private function connect()
     {
         $config = include 'config.php';
-        $this->connection = new mysqli($config['host'], $config['user'], $config['password'], $config['db_name']);
 
+        $database = 'ff5images_test';
+        if($config['env'] === 'prod') $database = 'ff5images';
+
+        $this->connection = new mysqli($config['host'], $config['user'], $config['password'], $database);
+       
         if ($this->connection->connect_error) {
             die("Connection Error " . $this->connection->connect_error);
         }
