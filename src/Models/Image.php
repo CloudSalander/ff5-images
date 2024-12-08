@@ -6,12 +6,13 @@ class Image
     private ?int $id;
     private string $title;
     private string $path;
-    private Database $database;
+    private \mysqli $conn;
 
     private const UPLOAD_DIR = 'uploads';
 
     public function __construct() {
-        $this->database = new Database();
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
 
     public function setData(?int $id = null)
@@ -68,56 +69,71 @@ class Image
     private function saveRow(): bool {
         
         $result = false;
-
-        $conn = $this->database->getConnection();
     
         $sql = "INSERT INTO images (title, path) VALUES (?, ?)";
-        $stmt = $conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         if (!$stmt) return false;
         
         $stmt->bind_param("ss", $this->title, $this->path);
         if ($stmt->execute()) $result = true;
 
         $stmt->close();
-        $conn->close();
 
         return $result;
     }
 
     public function getImages(): bool | array {
-        $conn = $this->database->getConnection();
         $result = false;
         
         $sql = "SELECT id,title,path as image FROM images";
-        $stmt = $conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         if (!$stmt) return false;
         if ($stmt->execute()) {
             $result = $stmt->get_result();
             $result = $result->fetch_all(MYSQLI_ASSOC);
         }
         $stmt->close();
-        $conn->close();
-
         return $result;
     }
 
     public function getImageById(int $id): bool | array {
-        $conn = $this->database->getConnection();
-    
+        $result = false;
+
         $sql = "SELECT id,title,path as image FROM images WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) return false;
+        $stmt = $this->conn->prepare($sql);
         
         $stmt->bind_param("i", $id);
-        
         if ($stmt->execute()) {
             $result = $stmt->get_result();
             $result = $result->fetch_assoc();
-            if(is_null($result)) return false;
-            else return $result;
+            if(is_null($result)) $result = false;
         }
         $stmt->close();
-        $conn->close();
-        return false;
+       
+        return $result;
+    }
+
+    public function deleteImageById(int $id): bool {
+        $image_row = $this->getImageById($id);
+        return $this->deleteRow($id) && unlink($image_row['image']);
+    }
+
+    private function deleteRow(int $id): bool {
+        $result = false;
+    
+        $sql = "DELETE from images WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        
+        if ($stmt->execute()) {
+            if($stmt->affected_rows > 0) $result = true;
+        }
+        $stmt->close();
+        return $result;
+    }
+
+    public function __destruct()
+    {
+        $this->conn->close();
     }
 }

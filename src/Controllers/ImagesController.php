@@ -48,7 +48,18 @@ class ImagesController {
     }
 
     public function delete($id = null) {
-        var_dump("I'm in!");
+        $result = false;
+        if(isset($id)) $result = $this->imageModel->deleteImageById($id);
+        
+        if($result) {
+            $response = new SuccessfulOperationResponse();
+            $this->respond(200,$response->toJson());
+        }
+        else {
+            $response = new NoImages();
+            $this->respond(404,$response->toJson());
+        }   
+
     }
 
     private function respond(int $code, string $message) {
