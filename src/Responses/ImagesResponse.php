@@ -1,5 +1,6 @@
 <?php
 namespace App\Responses;
+
 class ImagesResponse extends SuccessResponse {
     public function __construct(array $data = []) {
         $this->code = 1;

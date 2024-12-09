@@ -1,5 +1,7 @@
 <?php
 namespace App;
+error_reporting(E_ALL & ~E_WARNING);
+
 require 'vendor/autoload.php';
 require_once 'Database.php';
 require_once 'router.php';

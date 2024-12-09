@@ -8,6 +8,8 @@ conservantes ni colorantes(salvo los que quizá me haya comido en el proceso :))
 La API viene a resolver los requisitos funcionales del enunciado orientándome 
 a mi lenguaje de mayor dominio, PHP.
 
+No hay frontend como tal, solo una vista que carga imágenes llamando a la API.
+
 ### Tecnologías utilizadas
 
 - PHP 8.2.12
@@ -152,6 +154,8 @@ O muestra un error:
 
 - En el fichero "config.php" podemos alternar el valor de 'env' entre 'prod' 
 y 'dev' para usar la base de desarrollo de producción o de testing.
+
+- La base de datos e testing, incluida en "create_test.sql" incluye algunos registros de prueba :)
 
 ### Explicación del desarrollo
 
