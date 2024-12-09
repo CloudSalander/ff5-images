@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .image-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .image-item {
+            width: calc(33.33% - 20px);
+            box-sizing: border-box;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .image-item p {
+            margin: 10px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 50px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <div id="loading" class="loading">Loading images...</div>
+        <div id="imageGrid" class="image-grid" style="display: none;"></div>
+        <div id="error" class="error" style="display: none;">Failed to load images.</div>
+    </div>
+
+    <script>
+        async function loadImages() {
+            const loadingElement = document.getElementById('loading');
+            const imageGrid = document.getElementById('imageGrid');
+            const errorElement = document.getElementById('error');
+
+            try {
+                const response = await fetch('http://localhost/ff5-images/images');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch images');
+                }
+
+                const images = await response.json();
+
+                loadingElement.style.display = 'none';
+                imageGrid.style.display = 'flex';
+                images.data.forEach(image => {
+                    const div = document.createElement('div');
+                    div.classList.add('image-item');
+                    div.innerHTML = `
+                        <img src="${image.image}" alt="${image.title}">
+                        <p>${image.title}</p>
+                    `;
+                    imageGrid.appendChild(div);
+                });
+            } catch (error) {
+                console.error(error);
+                loadingElement.style.display = 'none';
+                errorElement.style.display = 'block';
+                errorElement.textContent = 'Failed to load images. Please try again later.';
+            }
+        }
+        loadImages();
+    </script>
+</body>
+</html>

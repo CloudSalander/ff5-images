@@ -14,7 +14,7 @@ class ImagesResponse extends SuccessResponse {
     }
     private function getImageFormat(string $path): string {
         $explodedPath = explode(".",$path);
-        $image = base64_encode($path);
-        return 'data:image/'.$explodedPath[1].';base64,' . base64_encode($image);
+        $image = base64_encode(file_get_contents($path));
+        return 'data:image/'.$explodedPath[1].';base64,' . $image;
     } 
 }
